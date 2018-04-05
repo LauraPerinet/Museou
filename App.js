@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { Platform, Text, View, StyleSheet } from 'react-native';
+import { Platform, View, ActivityIndicator, FlatList, Text, Slider } from 'react-native';
 import { Constants, Location, Permissions, MapView } from 'expo';
 
 export default class App extends Component {
   state = {
     location: null,
     errorMessage: null,
+    distance:0,
+    mapRegion: { latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }
   };
 
   componentWillMount() {
@@ -17,6 +19,9 @@ export default class App extends Component {
       this._getLocationAsync();
     }
   }
+
+
+
 
   _getLocationAsync = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
@@ -30,43 +35,80 @@ export default class App extends Component {
     this.setState({ location });
   };
 
+  _handleMapRegionChange = mapRegion => {
+    this.setState({ mapRegion });
+  };
+
   render() {
     let longitude = 'Waiting..';
     let latitude = 'Waiting..';
+    let distance = 'Waiting..';
 
-    if (this.state.errorMessage) {
-      text = this.state.errorMessage;
-    } else if (this.state.location) {
+ if (this.state.location) {
 
       longitude = this.state.location.coords.longitude;
       latitude = this.state.location.coords.latitude;
+      distance = this.state.distance;
+
+      this.setState();
     }
 
-    return (
-      <MapView
-              style={{ flex: 1 }}
-              initialRegion={{
-                latitude,
-                longitude,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-              }}
-            />
+
+
+     if(this.state.isLoading){
+      return(
+        <View style={{flex: 1, padding: 20}}>
+          <ActivityIndicator/>
+        </View>
+      )
+    }
+  fetch('https://opendata.paris.fr/api/records/1.0/search/?dataset=liste-musees-de-france-a-paris&rows=1295&facet=cp&geofilter.distance='+latitude+','+longitude+','+distance)
+      .then((response) => response.json())
+      .then((responseJson) => {
+
+        this.setState({
+          isLoading: false,
+          dataSource: responseJson.records,
+        }, function(){
+
+        });
+
+      })
+      .catch((error) =>{
+        console.error(error);
+      });
+    return(
+
+
+      <View style={{flex: 1, paddingTop:20}}>
+        <Text> Selectionnez votre distance</Text>
+        <Slider
+          maximumValue={ 3000 }
+          value={this.state.distance}
+          onValueChange={distance => this.setState({ distance })}
+          step= { 1 }
+        />
+        <Text> Distance en mètre : { this.state.distance } </Text>
+
+
+        <MapView
+          style={{ alignSelf: 'stretch', height: 200 }}
+          region={{ latitude, longitude, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }}
+          onRegionChange={this._handleMapRegionChange}
+        />
+
+
+        <FlatList
+          data={this.state.dataSource}
+          renderItem={({item}) => <Text>{item.fields.nom_du_musee}</Text>}
+          keyExtractor={(item, index) => index}
+        />
+      </View>
+
+
+
     );
+
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: Constants.statusBarHeight,
-    backgroundColor: '#ecf0f1',
-  },
-  paragraph: {
-    margin: 24,
-    fontSize: 18,
-    textAlign: 'center',
-  },
-});
