@@ -4,12 +4,20 @@ import { Constants, Location, Permissions, MapView } from 'expo';
 
 export default class App extends Component {
   state = {
+    markers: [{
+    title: 'Moi',
+    coordinates: {
+      latitude: null,//48.849679,
+      longitude: null//2.331783
+    
+    },
+  }],
     location: null,
     errorMessage: null,
     distance:0,
     mapRegion: { latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }
   };
-// Test commit
+
   componentWillMount() {
     if (Platform.OS === 'android' && !Constants.isDevice) {
       this.setState({
@@ -19,7 +27,6 @@ export default class App extends Component {
       this._getLocationAsync();
     }
   }
-
 
 
 
@@ -49,10 +56,10 @@ export default class App extends Component {
       longitude = this.state.location.coords.longitude;
       latitude = this.state.location.coords.latitude;
       distance = this.state.distance;
-
-      this.setState();
+     
+      this.setState();      
     }
-
+    
 
 
      if(this.state.isLoading){
@@ -78,26 +85,36 @@ export default class App extends Component {
         console.error(error);
       });
     return(
-
-
+     
+      
       <View style={{flex: 1, paddingTop:20}}>
         <Text> Selectionnez votre distance</Text>
-        <Slider
+        <Slider 
           maximumValue={ 3000 }
           value={this.state.distance}
           onValueChange={distance => this.setState({ distance })}
           step= { 1 }
         />
         <Text> Distance en mètre : { this.state.distance } </Text>
-
+        
 
         <MapView
           style={{ alignSelf: 'stretch', height: 200 }}
           region={{ latitude, longitude, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }}
           onRegionChange={this._handleMapRegionChange}
-        />
-
-
+          
+        >
+       {this.state.markers.map(marker => (
+    <MapView.Marker 
+    
+      coordinate={{latitude,longitude}}
+      title={marker.title}
+      
+    />
+  ))}
+        </MapView>
+      
+      
         <FlatList
           data={this.state.dataSource}
           renderItem={({item}) => <Text>{item.fields.nom_du_musee}</Text>}
@@ -105,7 +122,7 @@ export default class App extends Component {
         />
       </View>
 
-
+        
 
     );
 
