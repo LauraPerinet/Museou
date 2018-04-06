@@ -1,15 +1,27 @@
 import React, { Component } from 'react';
-import { Platform, View, ActivityIndicator, FlatList, Text, Slider } from 'react-native';
+import { Platform,View, ActivityIndicator, FlatList, Text, Slider, Button, Alert } from 'react-native';
 import { Constants, Location, Permissions, MapView } from 'expo';
 
 export default class App extends Component {
   state = {
+    markers: [{
+    title: 'Moi',
+    coordinates: {
+      latitude: null,//48.849679,
+      longitude: null//2.331783
+    
+    
+    },
+    
+    
+  }],
     location: null,
     errorMessage: null,
     distance:0,
     mapRegion: { latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }
   };
-
+  
+  
   componentWillMount() {
     if (Platform.OS === 'android' && !Constants.isDevice) {
       this.setState({
@@ -19,7 +31,7 @@ export default class App extends Component {
       this._getLocationAsync();
     }
   }
-
+  
 
 
   _getLocationAsync = async () => {
@@ -37,7 +49,13 @@ export default class App extends Component {
   _handleMapRegionChange = mapRegion => {
     this.setState({ mapRegion });
   };
-
+  
+ onPress = () => {
+   Alert.alert(
+      'you need to...'
+         
+         )
+  }
   render() {
     let longitude = 'Waiting..';
     let latitude = 'Waiting..';
@@ -96,9 +114,9 @@ export default class App extends Component {
           onRegionChange={this._handleMapRegionChange}
          showsUserLocation={true}
          userLocationAnnotationTitle={'Moi'}
-        //  showsPointsOfInterest={false}
-        //  showsMyLocationButton={false}
-        //  showsCompass={false}
+         showsPointsOfInterest={false}
+         showsMyLocationButton={false}
+         showsCompass={false}
         >
        
  
@@ -123,12 +141,34 @@ export default class App extends Component {
           renderItem={({item}) => <Text>{item.fields.nom_du_musee}</Text>}
           keyExtractor={(item, index) => index}
         />
+          showsUserLocation={true}
+        >
+      
+        </MapView>
+      
+      
+      
+      <FlatList
+       data={this.state.dataSource}
+       
+        renderItem={({ item }) => (
+          <Button 
+          title = {item.fields.nom_du_musee} 
+          onPress={this.onPress}
+          />
+      )}
+      keyExtractor={(item, index) => index}
+      />
+      
       </View>
+      
 
         
 
     );
+    
 
   }
 }
+
 
