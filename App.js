@@ -4,14 +4,6 @@ import { Constants, Location, Permissions, MapView } from 'expo';
 
 export default class App extends Component {
   state = {
-    markers: [{
-    title: 'Moi',
-    coordinates: {
-      latitude: null,//48.849679,
-      longitude: null//2.331783
-    
-    },
-  }],
     location: null,
     errorMessage: null,
     distance:0,
@@ -102,16 +94,27 @@ export default class App extends Component {
           style={{ alignSelf: 'stretch', height: 200 }}
           region={{ latitude, longitude, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }}
           onRegionChange={this._handleMapRegionChange}
-          
+         showsUserLocation={true}
+         userLocationAnnotationTitle={'Moi'}
+        //  showsPointsOfInterest={false}
+        //  showsMyLocationButton={false}
+        //  showsCompass={false}
         >
-       {this.state.markers.map(marker => (
-    <MapView.Marker 
+       
+ 
+            data={this.state.dataSource}
+
+        renderItem={({ item }) => (
+      <MapView.Marker
+          title = {item.fields.nom_du_musee} 
+          coordinate = {item.fields.coordonnees_}
+               />
+      )}
+      keyExtractor={(item, index) => index}
+                   
+                        
     
-      coordinate={{latitude,longitude}}
-      title={marker.title}
-      
-    />
-  ))}
+    
         </MapView>
       
       
