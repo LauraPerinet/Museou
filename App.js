@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, View, ActivityIndicator, FlatList, Text, Slider } from 'react-native';
+import { Platform, View, ActivityIndicator, FlatList, Text, Slider, StyleSheet } from 'react-native';
 import { Constants, Location, Permissions, MapView } from 'expo';
 
 export default class App extends Component {
@@ -10,7 +10,10 @@ export default class App extends Component {
       latitude: null,//48.849679,
       longitude: null//2.331783
     
+    
     },
+    
+    
   }],
     location: null,
     errorMessage: null,
@@ -104,28 +107,46 @@ export default class App extends Component {
           onRegionChange={this._handleMapRegionChange}
           
         >
-       {this.state.markers.map(marker => (
-    <MapView.Marker 
-    
-      coordinate={{latitude,longitude}}
-      title={marker.title}
       
-    />
-  ))}
         </MapView>
       
       
-        <FlatList
-          data={this.state.dataSource}
-          renderItem={({item}) => <Text>{item.fields.nom_du_musee}</Text>}
-          keyExtractor={(item, index) => index}
-        />
+      
+      <FlatList
+       data={this.state.dataSource}
+       
+        renderItem={({ item }) => (
+          <Text style={styles.red}>{item.fields.nom_du_musee}</Text>
+      )}
+      keyExtractor={(item, index) => index}
+      />
+      
       </View>
+      
 
         
 
     );
+    
 
   }
 }
 
+const styles = StyleSheet.create({
+  /*bigblue: {
+    color: 'blue',
+    fontWeight: 'bold',
+    fontSize: 30,
+  },*/
+  red: {
+    margin: 5,
+    color: 'white',
+    borderRadius: 4,
+    paddingVertical: 10,
+    backgroundColor: 'black',
+    fontSize: 10,
+    fontWeight: 'bold',
+    
+    
+  },
+});
