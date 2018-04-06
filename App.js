@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, View, ActivityIndicator, FlatList, Text, Slider, StyleSheet } from 'react-native';
+import { Platform,View, ActivityIndicator, FlatList, Text, Slider, Button, Alert } from 'react-native';
 import { Constants, Location, Permissions, MapView } from 'expo';
 
 export default class App extends Component {
@@ -20,7 +20,8 @@ export default class App extends Component {
     distance:0,
     mapRegion: { latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }
   };
-
+  
+  
   componentWillMount() {
     if (Platform.OS === 'android' && !Constants.isDevice) {
       this.setState({
@@ -30,6 +31,7 @@ export default class App extends Component {
       this._getLocationAsync();
     }
   }
+  
 
 
 
@@ -48,7 +50,13 @@ export default class App extends Component {
   _handleMapRegionChange = mapRegion => {
     this.setState({ mapRegion });
   };
-
+  
+ onPress = () => {
+   Alert.alert(
+      'you need to...'
+         
+         )
+  }
   render() {
     let longitude = 'Waiting..';
     let latitude = 'Waiting..';
@@ -105,7 +113,7 @@ export default class App extends Component {
           style={{ alignSelf: 'stretch', height: 200 }}
           region={{ latitude, longitude, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }}
           onRegionChange={this._handleMapRegionChange}
-          
+          showsUserLocation={true}
         >
       
         </MapView>
@@ -116,7 +124,10 @@ export default class App extends Component {
        data={this.state.dataSource}
        
         renderItem={({ item }) => (
-          <Text style={styles.red}>{item.fields.nom_du_musee}</Text>
+          <Button 
+          title = {item.fields.nom_du_musee} 
+          onPress={this.onPress}
+          />
       )}
       keyExtractor={(item, index) => index}
       />
@@ -132,21 +143,4 @@ export default class App extends Component {
   }
 }
 
-const styles = StyleSheet.create({
-  /*bigblue: {
-    color: 'blue',
-    fontWeight: 'bold',
-    fontSize: 30,
-  },*/
-  red: {
-    margin: 5,
-    color: 'white',
-    borderRadius: 4,
-    paddingVertical: 10,
-    backgroundColor: 'black',
-    fontSize: 10,
-    fontWeight: 'bold',
-    
-    
-  },
-});
+
