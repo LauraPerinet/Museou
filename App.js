@@ -1,8 +1,42 @@
 import React, { Component } from 'react';
-import { Platform,View, ActivityIndicator, FlatList, Text, Slider, Button, Alert } from 'react-native';
+import { Platform,ActivityIndicator, View, FlatList, Text, Slider, Button} from 'react-native';
 import { Constants, Location, Permissions, MapView } from 'expo';
+import NavigationExperimental from 'react-native-deprecated-custom-components';
 
 export default class App extends Component {
+  
+
+  render() {
+
+    return(
+     
+      <NavigationExperimental.Navigator initialRoute = {{ id: 'Page2' }}
+     renderScene = {this.NavigatorRenderScene} />
+     
+      
+
+        
+
+    );
+
+  }
+  
+  NavigatorRenderScene(route, navigator) {
+  switch (route.id) {
+    case 'Page2':
+    return (<Page1 navigator = {navigator} /> );
+    case 'Page1':
+    return (<Page2 navigator = {navigator} /> );
+  }
+}
+
+}
+
+
+class Page1 extends Component {
+  
+  
+  
   state = {
     markers: [{
     title: 'Moi',
@@ -34,6 +68,7 @@ export default class App extends Component {
   
 
 
+
   _getLocationAsync = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== 'granted') {
@@ -50,14 +85,9 @@ export default class App extends Component {
     this.setState({ mapRegion });
   };
   
- onPress = () => {
-   Alert.alert(
-      'you need to...'
-         
-         )
-  }
   render() {
-    let longitude = 'Waiting..';
+    
+      let longitude = 'Waiting..';
     let latitude = 'Waiting..';
     let distance = 'Waiting..';
 
@@ -70,15 +100,14 @@ export default class App extends Component {
       this.setState();      
     }
     
-
-
      if(this.state.isLoading){
       return(
         <View style={{flex: 1, padding: 20}}>
           <ActivityIndicator/>
         </View>
       )
-    }
+}
+
   fetch('https://opendata.paris.fr/api/records/1.0/search/?dataset=liste-musees-de-france-a-paris&rows=1295&facet=cp&geofilter.distance='+latitude+','+longitude+','+distance)
       .then((response) => response.json())
       .then((responseJson) => {
@@ -94,13 +123,14 @@ export default class App extends Component {
       .catch((error) =>{
         console.error(error);
       });
-    return(
+
+ 
+    return (
      
-      
       <View style={{flex: 1, paddingTop:20}}>
         <Text> Selectionnez votre distance</Text>
         <Slider 
-          maximumValue={ 3000 }
+          maximumValue={ 10000 }
           value={this.state.distance}
           onValueChange={distance => this.setState({ distance })}
           step= { 1 }
@@ -112,35 +142,6 @@ export default class App extends Component {
           style={{ alignSelf: 'stretch', height: 200 }}
           region={{ latitude, longitude, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }}
           onRegionChange={this._handleMapRegionChange}
-         showsUserLocation={true}
-         userLocationAnnotationTitle={'Moi'}
-         showsPointsOfInterest={false}
-         showsMyLocationButton={false}
-         showsCompass={false}
-        >
-       
- 
-            data={this.state.dataSource}
-
-        renderItem={({ item }) => (
-      <MapView.Marker
-          title = {item.fields.nom_du_musee} 
-          coordinate = {item.fields.coordonnees_}
-               />
-      )}
-      keyExtractor={(item, index) => index}
-                   
-                        
-    
-    
-        </MapView>
-      
-      
-        <FlatList
-          data={this.state.dataSource}
-          renderItem={({item}) => <Text>{item.fields.nom_du_musee}</Text>}
-          keyExtractor={(item, index) => index}
-        />
           showsUserLocation={true}
         >
       
@@ -154,21 +155,31 @@ export default class App extends Component {
         renderItem={({ item }) => (
           <Button 
           title = {item.fields.nom_du_musee} 
-          onPress={this.onPress}
+          onPress={ () => this.props.navigator.push({ id: 'Page1' }) }
           />
       )}
       keyExtractor={(item, index) => index}
       />
       
       </View>
-      
-
-        
-
     );
-    
-
-  }
+  
+}
 }
 
 
+class Page2 extends Component {
+  render() {
+    return (
+    <View style={{flex: 1, paddingTop:20}}>
+    <Text style={{fontWeight: 'bold', fontSize : 30 }} onPress={ () => this.props.navigator.push({ id: 'Page2' }) }> Retour </Text>
+    
+    <Text>Nom du musée :</Text> 
+    <Text>Horaires</Text>
+    <Text>Site web</Text>
+      
+      </View>
+      
+      );
+  }
+}
