@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Platform, ActivityIndicator, View, FlatList, Text, Slider, Button, TouchableHighlight, StyleSheet, Image } from 'react-native';
+import { Platform, ActivityIndicator, View, FlatList, Text, Slider, TouchableHighlight, StyleSheet, Image } from 'react-native';
 import { Constants, Location, Permissions, MapView } from 'expo';
 import NavigationExperimental from 'react-native-deprecated-custom-components';
+import { Icon } from 'react-native-elements'
 
 export default class App extends Component {
   
@@ -376,27 +377,68 @@ class Page2 extends Component {
     return (
     <View style={{flex: 1}}>
       <Header />
-      <View style={{flex: 4, paddingTop:20}}>
+      <View style={{flex: 4, paddingTop:5}}>
        
-        <Text style={{fontWeight: 'bold', fontSize : 30 }} onPress={ () => this.props.navigator.push({ id: 'Page2' }) }> Retour </Text>
+        <Text style={{fontWeight: 'bold', fontSize : 20 }} onPress={ () => this.props.navigator.push({ id: 'Page2' }) }> Retour en arrière </Text>
         
        
-        <Text>{this.props.item.item.fields.nom_du_musee }</Text> 
-        
-        <Text>Adresse :</Text>
-        <Text>{this.props.item.item.fields.adr }</Text>
-        <Text>{this.props.item.item.fields.cp }, {this.props.item.item.fields.ville }</Text>
-        
-        <Text>Période d'ouverture :</Text>
-        <Text>{this.props.item.item.fields.periode_ouverture }</Text>
-        
-        <Text>Fermetures annuelles :</Text>
-        <Text>{this.props.item.item.fields.fermeture_annuelle }</Text>
-        
-        <Text>Site web :</Text>
-        <Text>{this.props.item.item.fields.sitweb }</Text>
+      <Icon
+      iconStyle ={{marginLeft:-250, paddingTop:20}}
+      name='account-balance'
+      type='action'
+      color='#FBB03B'
+      />
+
+    <Text style={{fontWeight: 'bold', fontSize : 15, color:'#0173BF', marginLeft:30, paddingTop:5}}>Nom du musée :</Text> 
+    <Text style={{marginLeft:35}}>{this.props.item.item.fields.nom_du_musee }</Text>
+    
+    
+      <Icon
+      iconStyle ={{marginLeft:-250, paddingTop:5}}
+      name='room'
+      type='action'
+      color='#FBB03B'
+      />
+      
+    <Text style={{fontWeight: 'bold', fontSize : 15, color:'#0173BF', marginLeft:30, paddingTop:5}}>Adresse :</Text>
+    <Text style={{marginLeft:35}}>{this.props.item.item.fields.adr }</Text>
+    <Text style={{marginLeft:35}}>{this.props.item.item.fields.cp }, {this.props.item.item.fields.ville }</Text>
+    
+    
+      <Icon
+      iconStyle ={{marginLeft:-250, paddingTop:5}}
+      name='query-builder'
+      type='action'
+      color='#FBB03B'
+      />
+      
+    <Text style={{fontWeight: 'bold', fontSize : 15, color:'#0173BF', marginLeft:30, paddingTop:5}} >Période d'ouverture :</Text>
+    <Text style={{marginLeft:35}}>{this.props.item.item.fields.periode_ouverture }</Text>
+    
+      <Icon
+      iconStyle ={{marginLeft:-250, paddingTop:5}}
+      name='blockr'
+      type='action'
+      color='#FBB03B'
+      />
+      
+    <Text style={{fontWeight: 'bold', fontSize : 15, color:'#0173BF', marginLeft:30, paddingTop:5}}>Fermetures annuelles :</Text>
+    <Text style={{marginLeft:35}}>{this.props.item.item.fields.fermeture_annuelle }</Text>
+    
+    
+      <Icon
+      iconStyle ={{marginLeft:-250, paddingTop:5}}
+      name='language'
+      type='action'
+      color='#FBB03B'
+      />
+      
+    <Text style={{fontWeight: 'bold', fontSize : 15, color:'#0173BF', marginLeft:30, paddingTop:5}}>Site web :</Text> 
+    <Text style={{marginLeft:35}}>{this.props.item.item.fields.sitweb }</Text>
+
+      
       </View>
-       </View>
+      </View>
       
       );
   }
