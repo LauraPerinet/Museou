@@ -5,49 +5,89 @@ import NavigationExperimental from 'react-native-deprecated-custom-components';
 import { Icon } from 'react-native-elements'
 
 export default class App extends Component {
-  
+
 
   render() {
 
     return(
-     
-      <NavigationExperimental.Navigator initialRoute = {{ id: 'Page2' }}
-     renderScene = {this.NavigatorRenderScene} />
-     
-      
 
-        
+      <NavigationExperimental.Navigator initialRoute = {{ id: 'PageAccueil' }}
+     renderScene = {this.NavigatorRenderScene} />
+
+
 
     );
 
   }
-  
+
   NavigatorRenderScene(route, navigator) {
   switch (route.id) {
     case 'Page2':
     return (<Page1 navigator = {navigator} /> );
     case 'Page1':
     return (<Page2 navigator = {navigator} item={route.item} /> );
+    case 'PageAccueil':
+    return (<PageAccueil navigator = {navigator} item={route.item} /> );
+    case 'PageAbout':
+    return (<PageAbout navigator = {navigator} item={route.item} /> );
   }
 }
 
 }
 
+class PageAccueil extends Component {
+
+  render() {
+    return(
+      <View style={styles.container}>
+      <Image style={styles.bgContainer}
+                  source={require('./img/image.png')}
+        />
+        <TouchableHighlight style={styles.buttonAccueil} onPress={ () => this.props.navigator.push({id: 'Page2'})}>
+        <Text style={styles.textAccueil}>Chercher un musée</Text>
+         </TouchableHighlight>
+         <TouchableHighlight style={styles.buttonAccueil} onPress={ () => this.props.navigator.push({id: 'PageAbout'})}>
+        <Text style={styles.textAccueil}>A propos de nous</Text>
+         </TouchableHighlight>
+      </View>
+    );
+
+  }
+
+}
+
+class PageAbout extends Component {
+
+  render() {
+    return(
+      <View style={styles.container}>
+      <Image style={styles.bgContainer}
+                 // source={require('./img/logo.png')}
+        />
+
+        <Text>A propos de nous</Text>
+      </View>
+    );
+
+  }
+
+}
+
 
 class Page1 extends Component {
-  
-  
+
+
   state = {
     markers: [{
     title: 'Moi',
     coordinates: {
       latitude: null,//48.849679,
       longitude: null//2.331783
-    
-    
+
+
     },
-    
-    
+
+
   }],
     location: null,
     errorMessage: null,
@@ -252,8 +292,8 @@ class Page1 extends Component {
         }
     ]
   };
-  
-  
+
+
   componentWillMount() {
     if (Platform.OS === 'android' && !Constants.isDevice) {
       this.setState({
@@ -263,7 +303,7 @@ class Page1 extends Component {
       this._getLocationAsync();
     }
   }
-  
+
 
 
 
@@ -282,9 +322,9 @@ class Page1 extends Component {
   _handleMapRegionChange = mapRegion => {
     this.setState({ mapRegion });
   };
-  
+
   render() {
-    
+
     let longitude = 'Waiting..';
     let latitude = 'Waiting..';
     let distance = 'Waiting..';
@@ -294,10 +334,10 @@ class Page1 extends Component {
       longitude = this.state.location.coords.longitude;
       latitude = this.state.location.coords.latitude;
       distance = this.state.distance;
-     
-      this.setState();      
+
+      this.setState();
     }
-    
+
      if(this.state.isLoading){
       return(
         <View style={{flex: 1, padding: 20}}>
@@ -306,20 +346,20 @@ class Page1 extends Component {
       )
 }
 
-  fetch('https://opendata.paris.fr/api/records/1.0/search/?dataset=liste-musees-de-france-a-paris&rows=1295&facet=cp&geofilter.distance='+latitude+','+longitude+','+distance)
+/*  fetch('https://opendata.paris.fr/api/records/1.0/search/?dataset=liste-musees-de-france-a-paris&rows=1295&facet=cp&geofilter.distance='+latitude+','+longitude+','+distance)
       .then((response) => response.json())
       .then((responseJson) => {
           this.setState({
             isLoading: false,
             dataSource: responseJson.records,
-            
+
           }, function(){
-  
+
           });
       })
       .catch((error) =>{
         console.error(error);
-      });
+      });*/
 
     return (
       <View style={{flex: 1}}>
@@ -327,26 +367,26 @@ class Page1 extends Component {
         <View style={{flex: 5, paddingTop:20}}>
           <View style= {{margin:10}}>
               <Text  > Selectionnez votre distance </Text>
-              <Slider 
-                maximumValue={ 10000 }
+              <Slider
+                maximumValue={ 100000 }
                 value={this.state.distance}
                 onValueChange={distance => this.setState({ distance })}
                 step= { 1 }
               />
               <Text> Distance en mètre : { this.state.distance } </Text>
           </View>
-          
+
           <MapView
           style={{ alignSelf: 'stretch', height: 200,flex:1 }}
           region={{ latitude, longitude, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }}
           onRegionChange={this._handleMapRegionChange}
           showsUserLocation={true}
           />
-        
+
           <FlatList
            style={{marginBottom:20, flex:2}}
            data={this.state.dataSource}
-            
+
             renderItem={({ item }) => (
               <TouchableHighlight  style={styles.button } onPress={ () => this.props.navigator.push({ id: 'Page1' , item : {item}}) }>
                 <Text>{item.fields.nom_du_musee}</Text>
@@ -357,7 +397,7 @@ class Page1 extends Component {
         </View>
       </View>
     );
-  
+
 }
 }
 class Header extends Component {
@@ -378,10 +418,10 @@ class Page2 extends Component {
     <View style={{flex: 1}}>
       <Header />
       <View style={{flex: 4, paddingTop:5}}>
-       
+
         <Text style={{fontWeight: 'bold', fontSize : 20 }} onPress={ () => this.props.navigator.push({ id: 'Page2' }) }> Retour en arrière </Text>
-        
-       
+
+
       <Icon
       iconStyle ={{marginLeft:-250, paddingTop:20}}
       name='account-balance'
@@ -389,63 +429,60 @@ class Page2 extends Component {
       color='#FBB03B'
       />
 
-    <Text style={{fontWeight: 'bold', fontSize : 15, color:'#0173BF', marginLeft:30, paddingTop:5}}>Nom du musée :</Text> 
+    <Text style={{fontWeight: 'bold', fontSize : 15, color:'#0173BF', marginLeft:30, paddingTop:5}}>Nom du musée :</Text>
     <Text style={{marginLeft:35}}>{this.props.item.item.fields.nom_du_musee }</Text>
-    
-    
+
+
       <Icon
       iconStyle ={{marginLeft:-250, paddingTop:5}}
       name='room'
       type='action'
       color='#FBB03B'
       />
-      
+
     <Text style={{fontWeight: 'bold', fontSize : 15, color:'#0173BF', marginLeft:30, paddingTop:5}}>Adresse :</Text>
     <Text style={{marginLeft:35}}>{this.props.item.item.fields.adr }</Text>
     <Text style={{marginLeft:35}}>{this.props.item.item.fields.cp }, {this.props.item.item.fields.ville }</Text>
-    
-    
+
+
       <Icon
       iconStyle ={{marginLeft:-250, paddingTop:5}}
       name='query-builder'
       type='action'
       color='#FBB03B'
       />
-      
+
     <Text style={{fontWeight: 'bold', fontSize : 15, color:'#0173BF', marginLeft:30, paddingTop:5}} >Période d'ouverture :</Text>
     <Text style={{marginLeft:35}}>{this.props.item.item.fields.periode_ouverture }</Text>
-    
+
       <Icon
       iconStyle ={{marginLeft:-250, paddingTop:5}}
       name='blockr'
       type='action'
       color='#FBB03B'
       />
-      
+
     <Text style={{fontWeight: 'bold', fontSize : 15, color:'#0173BF', marginLeft:30, paddingTop:5}}>Fermetures annuelles :</Text>
     <Text style={{marginLeft:35}}>{this.props.item.item.fields.fermeture_annuelle }</Text>
-    
-    
+
+
       <Icon
       iconStyle ={{marginLeft:-250, paddingTop:5}}
       name='language'
       type='action'
       color='#FBB03B'
       />
-      
-    <Text style={{fontWeight: 'bold', fontSize : 15, color:'#0173BF', marginLeft:30, paddingTop:5}}>Site web :</Text> 
+
+    <Text style={{fontWeight: 'bold', fontSize : 15, color:'#0173BF', marginLeft:30, paddingTop:5}}>Site web :</Text>
     <Text style={{marginLeft:35}}>{this.props.item.item.fields.sitweb }</Text>
 
-      
       </View>
       </View>
-      
+
       );
   }
 }
-
 const styles = StyleSheet.create({
-
   button: {
     borderRadius: 4,
     borderTopColor: '#FBB03B',
@@ -456,5 +493,32 @@ const styles = StyleSheet.create({
     padding: 10,
     marginHorizontal:20,
     marginTop:10
+  },
+   container: {
+    flex: 1,
+    backgroundColor: '#2E89FF',
+    flexDirection:'column',
+    justifyContent: 'center',
+
+  },
+  bgContainer: {
+    flex: 1,
+   width: null,
+   height: null,
+    justifyContent: 'flex-start',
+    resizeMode: 'contain'
+  },
+    buttonAccueil: {
+    borderRadius: 50,
+    borderColor: '#F9B23F',
+    borderWidth: 3,
+    padding: 10,
+    marginHorizontal:20,
+    marginTop:10,
+    alignItems: 'center',
+    backgroundColor: '#F9B23F',
+  },
+     textAccueil: {
+ color:'#014573',
   },
 })
