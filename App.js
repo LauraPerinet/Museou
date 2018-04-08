@@ -26,7 +26,7 @@ export default class App extends Component {
     case 'Page2':
     return (<Page1 navigator = {navigator} /> );
     case 'Page1':
-    return (<Page2 navigator = {navigator} /> );
+    return (<Page2 navigator = {navigator} item={route.item} /> );
   }
 }
 
@@ -52,7 +52,7 @@ class Page1 extends Component {
     location: null,
     errorMessage: null,
     distance:0,
-    mapRegion: { latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }
+    mapRegion: { latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.0922, longitudeDelta: 0.0421 },
   };
   
   
@@ -129,23 +129,9 @@ class Page1 extends Component {
      
       <View style={{flex: 1, paddingTop:20}}>
         <Text> Selectionnez votre distance</Text>
-        <Slider 
-          maximumValue={ 10000 }
-          value={this.state.distance}
-          onValueChange={distance => this.setState({ distance })}
-          step= { 1 }
-        />
-        <Text> Distance en mètre : { this.state.distance } </Text>
-        
 
-        <MapView
-          style={{ alignSelf: 'stretch', height: 200 }}
-          region={{ latitude, longitude, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }}
-          onRegionChange={this._handleMapRegionChange}
-          showsUserLocation={true}
-        >
-      
-        </MapView>
+
+
       
       
       
@@ -155,7 +141,7 @@ class Page1 extends Component {
         renderItem={({ item }) => (
           <Button 
           title = {item.fields.nom_du_musee} 
-          onPress={ () => this.props.navigator.push({ id: 'Page1' }) }
+          onPress={ () => this.props.navigator.push({ id: 'Page1' , item : {item}}) }
           />
       )}
       keyExtractor={(item, index) => index}
@@ -174,9 +160,22 @@ class Page2 extends Component {
     <View style={{flex: 1, paddingTop:20}}>
     <Text style={{fontWeight: 'bold', fontSize : 30 }} onPress={ () => this.props.navigator.push({ id: 'Page2' }) }> Retour </Text>
     
-    <Text>Nom du musée :</Text> 
-    <Text>Horaires</Text>
-    <Text>Site web</Text>
+    <Text>Nom du musée : {JSON.stringify(this.props.item.item.fields) }</Text> 
+    <Text>{this.props.item.item.fields.nom_du_musee }</Text> 
+    
+    <Text>Adresse :</Text>
+    <Text>{this.props.item.item.fields.adr }</Text>
+    <Text>{this.props.item.item.fields.cp }, {this.props.item.item.fields.ville }</Text>
+    
+    <Text>Période d'ouverture :</Text>
+    <Text>{this.props.item.item.fields.periode_ouverture }</Text>
+    
+    <Text>Fermetures annuelles :</Text>
+    <Text>{this.props.item.item.fields.fermeture_annuelle }</Text>
+    
+    <Text>Site web :</Text>
+    <Text>{this.props.item.item.fields.sitweb }</Text>
+
       
       </View>
       
