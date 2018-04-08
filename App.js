@@ -41,7 +41,8 @@ class PageAccueil extends Component {
     return(
       <View style={styles.container}>
       <Image style={styles.bgContainer}
-                  source={require('./img/image.png')}
+                // source={require('./img/logo.png')}
+                 source={{ uri: 'http://laurapm-graphisme.fr/img/logoMuseou.png' }}
         />
         <TouchableHighlight style={styles.buttonAccueil} onPress={ () => this.props.navigator.push({id: 'Page2'})}>
         <Text style={styles.textAccueil}>Chercher un musée</Text>
@@ -62,6 +63,7 @@ class PageAbout extends Component {
     return(
       <View style={styles.container}>
       <Image style={styles.bgContainer}
+                  source={{ uri: 'http://laurapm-graphisme.fr/img/logoMuseou.png' }}
                  // source={require('./img/logo.png')}
         />
 
@@ -346,20 +348,18 @@ class Page1 extends Component {
       )
 }
 
-/*  fetch('https://opendata.paris.fr/api/records/1.0/search/?dataset=liste-musees-de-france-a-paris&rows=1295&facet=cp&geofilter.distance='+latitude+','+longitude+','+distance)
+fetch('https://opendata.paris.fr/api/records/1.0/search/?dataset=liste-musees-de-france-a-paris&rows=1295&facet=cp&geofilter.distance='+latitude+','+longitude+','+distance)
       .then((response) => response.json())
       .then((responseJson) => {
           this.setState({
             isLoading: false,
             dataSource: responseJson.records,
-
           }, function(){
-
           });
       })
       .catch((error) =>{
         console.error(error);
-      });*/
+      });
 
     return (
       <View style={{flex: 1}}>
@@ -405,6 +405,7 @@ class Header extends Component {
     return(
     <View style={{flex: 1, paddingTop:20}}>
       <Image
+      // source={require('./img/logo.png')}
         source={{ uri: 'http://laurapm-graphisme.fr/img/logoMuseou.png' }}
         style={{ height: 100, width: 100 }}
       />
@@ -454,31 +455,24 @@ class Page2 extends Component {
 
     <Text style={{fontWeight: 'bold', fontSize : 15, color:'#0173BF', marginLeft:30, paddingTop:5}} >Période d'ouverture :</Text>
     <Text style={{marginLeft:35}}>{this.props.item.item.fields.periode_ouverture }</Text>
-
       <Icon
       iconStyle ={{marginLeft:-250, paddingTop:5}}
       name='blockr'
       type='action'
       color='#FBB03B'
       />
-
     <Text style={{fontWeight: 'bold', fontSize : 15, color:'#0173BF', marginLeft:30, paddingTop:5}}>Fermetures annuelles :</Text>
     <Text style={{marginLeft:35}}>{this.props.item.item.fields.fermeture_annuelle }</Text>
-
-
       <Icon
       iconStyle ={{marginLeft:-250, paddingTop:5}}
       name='language'
       type='action'
       color='#FBB03B'
       />
-
     <Text style={{fontWeight: 'bold', fontSize : 15, color:'#0173BF', marginLeft:30, paddingTop:5}}>Site web :</Text>
     <Text style={{marginLeft:35}}>{this.props.item.item.fields.sitweb }</Text>
-
       </View>
       </View>
-
       );
   }
 }
@@ -499,7 +493,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#2E89FF',
     flexDirection:'column',
     justifyContent: 'center',
-
   },
   bgContainer: {
     flex: 1,
